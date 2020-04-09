@@ -10,7 +10,7 @@ $(function () {
      var mousex, mousey;
     var radius =20;
     var r0 = 0.4;
-    var initialInfect = 5;
+    var initialInfect = 3;
     var colorInit = rgb(150, 150, 150);
     var desiseIntensity = 0;
     var redDesise =  250;
@@ -85,7 +85,7 @@ $(function () {
         this.draw = function () {
             ctx.beginPath();
            
-
+          
             var gradient = ctx.createRadialGradient(this.x, this.y, 1, this.x - 4, this.y - 4, 20);
             if (this.desise == colorInit)
                 gradient.addColorStop(0, 'white');
@@ -133,6 +133,7 @@ $(function () {
             this.y += this.velocity.y;
 
             this.draw();
+          
         }
 
     }
