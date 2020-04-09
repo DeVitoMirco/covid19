@@ -11,11 +11,12 @@ $(function () {
     var radius =20;
     var r0 = 0.4;
     var initialInfect = 3;
-    var colorInit = rgb(150, 150, 150);
+    var colorInit = 150;
     var desiseIntensity = 0;
-    var redDesise =  250;
+    var redDesise = 0;
     var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
-     
+    var touchSensibility = 15;
+    var cmouse = 0;
     function init() {
 
         var minRadiusParticle = 5;
@@ -37,9 +38,9 @@ $(function () {
 
             for (var i = 0; i < numParticules; i++) {
 
-                var randomRadius = 20;
-                var desise = constColors[Math.floor(Math.random() * constColors.length)];
-                if (i < initialInfect) desise = colorDesise;
+                var randomRadius = radius;
+                var desise = colorInit;
+                if (i < initialInfect) desise = 0;
 
                 var x = (Math.random() * (widthWindow - randomRadius * 2)) + randomRadius;
                 var y = (Math.random() * (heightWindow - randomRadius * 2)) + randomRadius;
@@ -82,16 +83,23 @@ $(function () {
         }
         this.collision = false;
 
-        this.draw = function () {
+        this.draw = function (desise) {
             ctx.beginPath();
            
           
             var gradient = ctx.createRadialGradient(this.x, this.y, 1, this.x - 4, this.y - 4, 20);
-            if (this.desise == colorInit)
+            if (this.desise >= colorInit) {
                 gradient.addColorStop(0, 'white');
-            if (this.desise == colorDesise)
-                gradient.addColorStop(0, rgb(255, 146, 146));
-            gradient.addColorStop(1, this.desise);
+                gradient.addColorStop(1, rgb(this.desise, this.desise, this.desise));
+            }
+             
+            if (this.desise < colorInit) {
+                gradient.addColorStop(0, rgb(255, colorInit + this.desise, colorInit + this.desise));
+                gradient.addColorStop(1, rgb(255, this.desise, this.desise));
+            }
+             
+           
+             
             ctx.arc(
                 this.x,
                 this.y,
@@ -112,7 +120,8 @@ $(function () {
             if (this.y + this.radius > heightWindow || this.y - this.radius < 0) {
                 this.velocity.y = -this.velocity.y;
             }
-
+            if (this.desise > 0 && this.desise < colorInit)
+                this.desise--;
             for (var i = 0; i < particleArray.length; i++) {
                 if (this === particleArray[i]) continue;
                 if (distance(this.x, this.y, particleArray[i].x, particleArray[i].y) - this.radius - particleArray[i].radius < 0) {
@@ -132,8 +141,10 @@ $(function () {
             this.x += this.velocity.x;
             this.y += this.velocity.y;
 
-            this.draw();
-          
+            this.draw(this.desise);
+
+            //remove mousexy when passed to long
+           
         }
 
     }
@@ -176,7 +187,8 @@ $(function () {
         mousey = event.clientY - rect.top;
     }
     function isClicked(circle) {
-        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + 15;
+        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + touchSensibility;
+        cmouse = 0;
     }
     //function gradientFill(color) {
 
@@ -197,6 +209,7 @@ $(function () {
 
 
         const desise1 = particle.desise;
+        const desise2 = otherParticle.desise;
         const xDist = otherParticle.x - particle.x;
         const yDist = otherParticle.y - particle.y;
 
@@ -208,8 +221,8 @@ $(function () {
 
             // Store mass in var for better readability in collision equation
             const m1 = particle.mass;
-            const m2 = otherParticle.mass;
-            const desise2 = otherParticle.desise;
+            const m2 = otherParticle.mass; 
+            
             // Velocity before equation
             const u1 = rotate(particle.velocity, angle);
             const u2 = rotate(otherParticle.velocity, angle);
@@ -228,18 +241,28 @@ $(function () {
 
             otherParticle.velocity.x = vFinal2.x;
             otherParticle.velocity.y = vFinal2.y;
-            if (desise1 === colorDesise && Math.random() < r0) {
-                otherParticle.desise = colorDesise;
+
+            //100%
+            if (desise2 == 0 && desise1 == colorInit ) {
+                
+                particle.desise--; 
             }
-            if (desise2 === colorDesise  && Math.random() < r0 ) {
-                particle.desise = colorDesise;
+            if (desise1 == 0 &&  desise2 == colorInit) {
+                otherParticle.desise--; 
             }
-            //if (desise1 === "blue" && desise2 === "red") {
-            //    otherParticle.desise = "white";
-            //}
-            //if (desise2 === "blue" && desise1 === "red") {
-            //    particle.desise = "white";
-            //}
+
+            //50%
+            var r = Math.random() * colorInit;
+            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>desise2 ){
+                otherParticle.desise--;
+            }
+            
+            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > desise1) {
+                otherParticle.desise--;
+            }
+
+
+           
         }
     }
 
