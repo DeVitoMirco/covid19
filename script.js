@@ -8,9 +8,14 @@ $(function () {
     var particleArray = [];
     var canvasClicked = false
      var mousex, mousey;
-    var dimension = 0.35;
-    var r0 = 0.1;
+    var radius =20;
+    var r0 = 0.4;
     var initialInfect = 5;
+    var colorInit = rgb(150, 150, 150);
+    var desiseIntensity = 0;
+    var redDesise =  250;
+    var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
+     
     function init() {
 
         var minRadiusParticle = 5;
@@ -21,7 +26,7 @@ $(function () {
         widthWindow = window.innerWidth;
         heightWindow = window.innerHeight;
 
-        var constColors = ["white"];
+        var constColors = [colorInit];
 
         if (canvas.getContext) {
             ctx = canvas.getContext('2d');
@@ -32,9 +37,9 @@ $(function () {
 
             for (var i = 0; i < numParticules; i++) {
 
-                var randomRadius = Math.floor(dimension * (maxRadiusParticle - minRadiusParticle) + minRadiusParticle);
+                var randomRadius = 20;
                 var desise = constColors[Math.floor(Math.random() * constColors.length)];
-                if (i < initialInfect) desise = "red";
+                if (i < initialInfect) desise = colorDesise;
 
                 var x = (Math.random() * (widthWindow - randomRadius * 2)) + randomRadius;
                 var y = (Math.random() * (heightWindow - randomRadius * 2)) + randomRadius;
@@ -79,6 +84,14 @@ $(function () {
 
         this.draw = function () {
             ctx.beginPath();
+           
+
+            var gradient = ctx.createRadialGradient(this.x, this.y, 1, this.x - 4, this.y - 4, 20);
+            if (this.desise == colorInit)
+                gradient.addColorStop(0, 'white');
+            if (this.desise == colorDesise)
+                gradient.addColorStop(0, rgb(255, 146, 146));
+            gradient.addColorStop(1, this.desise);
             ctx.arc(
                 this.x,
                 this.y,
@@ -86,8 +99,10 @@ $(function () {
                 0,
                 2 * Math.PI
             );
-            ctx.strokeStyle = this.desise;
-            ctx.stroke();
+            //ctx.arc(this.x, this.y, radius, 0, 2 * Math.PI);
+
+            ctx.fillStyle = gradient;
+            ctx.fill();
         }
 
         this.update = function () {
@@ -107,7 +122,7 @@ $(function () {
 
      
             if (isClicked(this) ) {
-                this.desise = "white"; 
+                this.desise = colorInit; 
             }
 
           
@@ -138,7 +153,9 @@ $(function () {
 
         return rotatedVelocities;
     }
-
+    function rgb(r, g, b) {
+        return ["rgb(", r, ",", g, ",", b, ")"].join("");
+    }
 
     //canvas.addEventListener('click', (e) => {
     //    var canvasClicked = true;
@@ -158,8 +175,19 @@ $(function () {
         mousey = event.clientY - rect.top;
     }
     function isClicked(circle) {
-        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius;
+        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + 15;
     }
+    //function gradientFill(color) {
+
+    //    var gradient = ctx.createRadialGradient(100, 50, 5, 100, 75, 70);
+    //    gradient.addColorStop(0, 'white');
+    //    gradient.addColorStop(1, color);
+
+    //    ctx.arc(100, 75,radius, 0, 2 * Math.PI);
+
+    //    return gradient;
+    //}
+
 
     function resolveCollision(particle, otherParticle) {
 
@@ -199,11 +227,11 @@ $(function () {
 
             otherParticle.velocity.x = vFinal2.x;
             otherParticle.velocity.y = vFinal2.y;
-            if (desise1 === "red" && desise2 !== "blue" && Math.random() < r0) {
-                otherParticle.desise = "red";
+            if (desise1 === colorDesise && Math.random() < r0) {
+                otherParticle.desise = colorDesise;
             }
-            if (desise2 === "red" && desise1 !== "blue" && Math.random() < r0 ) {
-                 particle.desise = "red";
+            if (desise2 === colorDesise  && Math.random() < r0 ) {
+                particle.desise = colorDesise;
             }
             //if (desise1 === "blue" && desise2 === "red") {
             //    otherParticle.desise = "white";
