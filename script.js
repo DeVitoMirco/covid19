@@ -314,8 +314,9 @@ $(function () {
         if (nextLvFlag) {
             setTimeout(function () { nextLv = true; }, 3000);
         }
-        if (startFlag)
-            started = true;
+        if (startFlag) {
+            setTimeout(function () { started = true; }, 3000);
+        }
     });
  
 
