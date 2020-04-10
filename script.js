@@ -127,7 +127,7 @@ $(function () {
         this.radius = Radius;
         this.originalRadius = Radius;
         this.desise = desise;
-        this.dred =  colorInit- (colorInit - this.desise) + 1;
+        this.dred =  colorInit + (colorInit - this.desise) + 1;
         this.mass = 1;
         this.velocity = {
             x: (Math.random() - 0.5) * Speed,
@@ -147,7 +147,7 @@ $(function () {
              
             if (this.desise < colorInit) {
                 gradient.addColorStop(0, rgb(255, colorInit + this.desise, colorInit + this.desise));
-                gradient.addColorStop(1, rgb(colorInit, this.desise, this.desise));
+                gradient.addColorStop(1, rgb( this.dred, this.desise, this.desise));
             }
              
            
@@ -177,7 +177,7 @@ $(function () {
              
             if (this.desise > 0 && this.desise < colorInit) {
                 this.desise--;
-                if (this.dred < 255)
+                if (this.dred <= 255)
                     this.dred++;
                
             }
