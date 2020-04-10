@@ -27,7 +27,7 @@ $(function () {
     var radius = 20;  //piu piccolo piu difficile
     var r0 = 150; //piu alto piu difficle 
     var initialInfect = 10; //piu alto piu difficile 
-
+   
     //lv difficulty   ?touch=15&den=40&radius=20&r=50&infet=2
     //var touchSensibility = parseInt(getParameterByName('touch')); // piu basso piu difficile 
     //var densityLV = parseInt(getParameterByName('den'));  //10-100 piu grande piu difficile
@@ -65,7 +65,8 @@ $(function () {
     //     initialInfect = 5; //piu alto piu difficile 
     //}
 
-
+   
+ 
     function init() {
 
         var minRadiusParticle = 5;
@@ -84,6 +85,7 @@ $(function () {
             canvas.setAttribute('height', heightWindow);
             var longerSide = Math.max(widthWindow, heightWindow);
             var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / (140 - densityLV)) * density) / maxRadiusParticle);
+           
 
             for (var i = 0; i < numParticules; i++) {
 
@@ -159,8 +161,10 @@ $(function () {
             );
             //ctx.arc(this.x, this.y, radius, 0, 2 * Math.PI);
 
-            ctx.fillStyle = gradient;
-            ctx.fill();
+            
+                ctx.fillStyle = gradient;
+                ctx.fill();
+          
         }
 
         this.update = function () {
@@ -170,11 +174,17 @@ $(function () {
             if (this.y + this.radius > heightWindow || this.y - this.radius < 0) {
                 this.velocity.y = -this.velocity.y;
             }
-            if (this.desise > 0 && this.desise < colorInit) { 
-                this.desise--; 
+             
+            if (this.desise > 0 && this.desise < colorInit) {
+                this.desise--;
                 if (this.dred < 255)
-                this.dred++;
+                    this.dred++;
+               
             }
+            
+               
+            
+            
             for (var i = 0; i < particleArray.length; i++) {
                 if (this === particleArray[i]) continue;
                 if (distance(this.x, this.y, particleArray[i].x, particleArray[i].y) - this.radius - particleArray[i].radius < 0) {
@@ -193,10 +203,10 @@ $(function () {
 
             this.x += this.velocity.x;
             this.y += this.velocity.y;
-
+           
             this.draw(this.desise);
-
-            //remove mousexy when passed to long
+           
+           
            
         }
 
@@ -234,10 +244,12 @@ $(function () {
         console.log("x: " + mousex + " y: " + mousey)
     })
 
-    canvas.addEventListener('mouseup', function (e) {
-        mousex = 100000000000000;
-        mousey = 100000000000000;
-    });
+    //canvas.addEventListener('mouseup touchend', function (e) {
+    //    mousex = 100000000000000;
+    //    mousey = 100000000000000;
+    //});
+
+ 
    
 
     function getCursorPosition(canvas, event) {
@@ -319,8 +331,7 @@ $(function () {
                 otherParticle.desise--;
             }
 
-
-           
+         
         }
     }
 
