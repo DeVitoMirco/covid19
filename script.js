@@ -1,5 +1,12 @@
 $(function () {
+    
 
+    var lv = getParameterByName('lv');
+    if (lv == null)
+        lv = 1;
+    else
+        parseInt(lv);
+    console.log(lv);
     var myResizeTimer = null;
     var widthWindow = 0;
     var heightWindow = 0;
@@ -7,16 +14,58 @@ $(function () {
     var ctx = null;
     var particleArray = [];
     var canvasClicked = false
-     var mousex, mousey;
-    var radius =20;
-    var r0 = 0.4;
-    var initialInfect = 3;
+    var mousex, mousey;
+        
     var colorInit = 150;
+    var desiseInit = 149;
     var desiseIntensity = 0;
     var redDesise = 0;
     var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
-    var touchSensibility = 15;
-    var cmouse = 0;
+
+    var touchSensibility = 25; // piu basso piu difficile 
+    var densityLV = 40;  //10-100 piu grande piu difficile
+    var radius = 20;  //piu piccolo piu difficile
+    var r0 = 150; //piu alto piu difficle 
+    var initialInfect = 10; //piu alto piu difficile 
+
+    //lv difficulty   ?touch=15&den=40&radius=20&r=50&infet=2
+    //var touchSensibility = parseInt(getParameterByName('touch')); // piu basso piu difficile 
+    //var densityLV = parseInt(getParameterByName('den'));  //10-100 piu grande piu difficile
+    //var radius = parseInt(getParameterByName('radius'));  //piu piccolo piu difficile
+    //var r0 = parseInt(getParameterByName('r')); //piu alto piu difficle 
+    //var initialInfect = parseInt(getParameterByName('infet')); //piu alto piu difficile 
+
+    
+    //if (lv == 2) {
+    //      touchSensibility = 15; // piu basso piu difficile 
+    //      densityLV = 40;  //10-100 piu grande piu difficile
+    //      radius = 16;  //piu piccolo piu difficile
+    //      r0 = 60;   //piu alto piu difficle 
+    //      initialInfect = 2; //piu alto piu difficile 
+    //}
+    //if (lv == 3) {
+    //      touchSensibility = 12; // piu basso piu difficile 
+    //      densityLV = 60;  //10-100 piu grande piu difficile
+    //      radius = 14;  //piu piccolo piu difficile
+    //      r0 = 90;   //piu alto piu difficle 
+    //      initialInfect = 3; //piu alto piu difficile 
+    //}
+    //if (lv == 4) {
+    //      touchSensibility = 10; // piu basso piu difficile 
+    //      densityLV = 80;  //10-100 piu grande piu difficile
+    //      radius = 12;  //piu piccolo piu difficile
+    //      r0 = 120;   //piu alto piu difficle 
+    //      initialInfect = 4; //piu alto piu difficile 
+    //}
+    //if (lv > 4) {
+    //     touchSensibility = 5; // piu basso piu difficile 
+    //     densityLV = 100;  //10-100 piu grande piu difficile
+    //     radius = 10;  //piu piccolo piu difficile
+    //     r0 = 150;   //piu alto piu difficle 
+    //     initialInfect = 5; //piu alto piu difficile 
+    //}
+
+
     function init() {
 
         var minRadiusParticle = 5;
@@ -34,13 +83,13 @@ $(function () {
             canvas.setAttribute('width', widthWindow);
             canvas.setAttribute('height', heightWindow);
             var longerSide = Math.max(widthWindow, heightWindow);
-            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / 100) * density) / maxRadiusParticle);
+            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / (140 - densityLV)) * density) / maxRadiusParticle);
 
             for (var i = 0; i < numParticules; i++) {
 
                 var randomRadius = radius;
                 var desise = colorInit;
-                if (i < initialInfect) desise = 0;
+                if (i < initialInfect) desise = desiseInit;
 
                 var x = (Math.random() * (widthWindow - randomRadius * 2)) + randomRadius;
                 var y = (Math.random() * (heightWindow - randomRadius * 2)) + randomRadius;
@@ -76,6 +125,7 @@ $(function () {
         this.radius = Radius;
         this.originalRadius = Radius;
         this.desise = desise;
+        this.dred =  colorInit- (colorInit - this.desise) + 1;
         this.mass = 1;
         this.velocity = {
             x: (Math.random() - 0.5) * Speed,
@@ -95,7 +145,7 @@ $(function () {
              
             if (this.desise < colorInit) {
                 gradient.addColorStop(0, rgb(255, colorInit + this.desise, colorInit + this.desise));
-                gradient.addColorStop(1, rgb(255, this.desise, this.desise));
+                gradient.addColorStop(1, rgb(colorInit, this.desise, this.desise));
             }
              
            
@@ -120,8 +170,11 @@ $(function () {
             if (this.y + this.radius > heightWindow || this.y - this.radius < 0) {
                 this.velocity.y = -this.velocity.y;
             }
-            if (this.desise > 0 && this.desise < colorInit)
-                this.desise--;
+            if (this.desise > 0 && this.desise < colorInit) { 
+                this.desise--; 
+                if (this.dred < 255)
+                this.dred++;
+            }
             for (var i = 0; i < particleArray.length; i++) {
                 if (this === particleArray[i]) continue;
                 if (distance(this.x, this.y, particleArray[i].x, particleArray[i].y) - this.radius - particleArray[i].radius < 0) {
@@ -181,6 +234,12 @@ $(function () {
         console.log("x: " + mousex + " y: " + mousey)
     })
 
+    canvas.addEventListener('mouseup', function (e) {
+        mousex = 100000000000000;
+        mousey = 100000000000000;
+    });
+   
+
     function getCursorPosition(canvas, event) {
         const rect = canvas.getBoundingClientRect()
         mousex = event.clientX - rect.left;
@@ -190,17 +249,16 @@ $(function () {
         return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + touchSensibility;
         cmouse = 0;
     }
-    //function gradientFill(color) {
-
-    //    var gradient = ctx.createRadialGradient(100, 50, 5, 100, 75, 70);
-    //    gradient.addColorStop(0, 'white');
-    //    gradient.addColorStop(1, color);
-
-    //    ctx.arc(100, 75,radius, 0, 2 * Math.PI);
-
-    //    return gradient;
-    //}
-
+     
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
     function resolveCollision(particle, otherParticle) {
 
@@ -241,23 +299,23 @@ $(function () {
 
             otherParticle.velocity.x = vFinal2.x;
             otherParticle.velocity.y = vFinal2.y;
-
+            var r = Math.random() * colorInit;
             //100%
-            if (desise2 == 0 && desise1 == colorInit ) {
+            if (desise2 == 0 && desise1 == colorInit  ) {
                 
                 particle.desise--; 
             }
-            if (desise1 == 0 &&  desise2 == colorInit) {
+            if (desise1 == 0 && desise2 == colorInit  ) {
                 otherParticle.desise--; 
             }
 
             //50%
-            var r = Math.random() * colorInit;
-            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>desise2 ){
+           
+            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2+1*(colorInit-r0)) ){
                 otherParticle.desise--;
             }
             
-            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > desise1) {
+            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 + 1 * (colorInit - r0) ) ) {
                 otherParticle.desise--;
             }
 
