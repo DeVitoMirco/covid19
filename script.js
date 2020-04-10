@@ -71,10 +71,10 @@ $(function () {
 
        
         velDesise = 0.1 + ( lv/10 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
-        touchSensibility = 20 - lv  ; // piu basso piu difficile 
-        density = 600 + (lv*10) ;  //max 1300
-        radius = 20 - (lv/5) ;  //piu piccolo piu difficile
-        r0 = 130 + lv ; //piu alto piu difficle 
+        touchSensibility = 20  ; // piu basso piu difficile 
+        density = 600 + (lv*7) ;  //max 1300
+        radius = 20 - (lv/10) ;  //piu piccolo piu difficile
+        r0 = 150; //piu alto piu difficle 
         initialInfect = 0 + lv; //piu alto piu difficile 
         var speed = 4 + (lv/10);
 
@@ -229,7 +229,7 @@ $(function () {
             ctx.font = "18px  'Creepster', cursive";
             ctx.fillText("the red dots are contagious, tap them to cure", (widthWindow / 2) - 160, (heightWindow / 2));
             ctx.font = "14px  'Creepster', cursive";
-            ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2)+100);
+            ctx.fillText("Tap to start lv1", (widthWindow / 2) - 40, (heightWindow / 2)+100);
         }
         if (started) { 
             startFlag = false; 
@@ -271,7 +271,7 @@ $(function () {
             if (allSick) { 
                 nextLvFlag = true;
                 ctx.font = "30px  'Creepster', cursive";
-                ctx.fillText("You Died at lv " + lv, (widthWindow / 2) - 90, (heightWindow / 2) - 30); 
+                ctx.fillText("You Died at lv " + lv-1, (widthWindow / 2) - 90, (heightWindow / 2) - 30); 
                 ctx.font = "14px  'Creepster', cursive";
                 ctx.fillText("Tap to restart", (widthWindow / 2) - 40, (heightWindow / 2)   ); 
                 if (nextLv) {
