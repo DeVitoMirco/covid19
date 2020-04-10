@@ -15,18 +15,20 @@ $(function () {
     var particleArray = [];
     var canvasClicked = false
     var mousex, mousey;
-        
+    var endLevel = false;
     var colorInit = 150;
     var desiseInit = 149;
     var desiseIntensity = 0;
     var redDesise = 0;
     var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
 
-    var touchSensibility = 25; // piu basso piu difficile 
-    var densityLV = 40;  //10-100 piu grande piu difficile
+
+    var velDesise = 0.5; //velocity of contagius  0.1 very slow 1 normal 10 super fast
+    var touchSensibility = 20; // piu basso piu difficile 
+    var density = 600;  //max 1300
     var radius = 20;  //piu piccolo piu difficile
     var r0 = 150; //piu alto piu difficle 
-    var initialInfect = 10; //piu alto piu difficile 
+    var initialInfect = 6; //piu alto piu difficile 
    
     //lv difficulty   ?touch=15&den=40&radius=20&r=50&infet=2
     //var touchSensibility = parseInt(getParameterByName('touch')); // piu basso piu difficile 
@@ -65,14 +67,15 @@ $(function () {
     //     initialInfect = 5; //piu alto piu difficile 
     //}
 
-   
+    var someSick = false;
+    var tick = true;
  
     function init() {
 
         var minRadiusParticle = 5;
         var maxRadiusParticle = 50;
         var speed = 4;
-        var density = 500;
+      
         particleArray = [];
         widthWindow = window.innerWidth;
         heightWindow = window.innerHeight;
@@ -84,7 +87,7 @@ $(function () {
             canvas.setAttribute('width', widthWindow);
             canvas.setAttribute('height', heightWindow);
             var longerSide = Math.max(widthWindow, heightWindow);
-            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / (140 - densityLV)) * density) / maxRadiusParticle);
+            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / 100) * density) / maxRadiusParticle);
            
 
             for (var i = 0; i < numParticules; i++) {
@@ -129,6 +132,7 @@ $(function () {
         this.desise = desise;
         this.dred =  colorInit + (colorInit - this.desise) + 1;
         this.mass = 1;
+        this.isCured = this.desise == colorInit;
         this.velocity = {
             x: (Math.random() - 0.5) * Speed,
             y: (Math.random() - 0.5) * Speed
@@ -167,6 +171,7 @@ $(function () {
           
         }
 
+     
         this.update = function () {
             if (this.x + this.radius > widthWindow || this.x - this.radius < 0) {
                 this.velocity.x = -this.velocity.x;
@@ -175,11 +180,11 @@ $(function () {
                 this.velocity.y = -this.velocity.y;
             }
              
-            if (this.desise > 0 && this.desise < colorInit) {
-                this.desise--;
-                if (this.dred <= 255)
-                    this.dred++;
-               
+            if (this.desise >= velDesise && this.desise < colorInit ) {
+                this.desise-=velDesise;
+                if (this.dred <= 255-velDesise)
+                    this.dred+=velDesise;
+                
             }
             
                
@@ -193,21 +198,14 @@ $(function () {
             }
 
      
-            if (isClicked(this) ) {
-                this.desise = colorInit; 
-            }
-
-          
-
-
+            if (isClicked(this)) { 
+                this.desise = colorInit;  
+            } 
 
             this.x += this.velocity.x;
             this.y += this.velocity.y;
            
-            this.draw(this.desise);
-           
-           
-           
+            this.draw(this.desise); 
         }
 
     }
@@ -215,9 +213,36 @@ $(function () {
     function animate() {
         requestAnimationFrame(animate);
         ctx.clearRect(0, 0, widthWindow, heightWindow);
-        for (var i = 0; i < particleArray.length; i++) {
-            particleArray[i].update();
+        someSick = false;
+        for (var i = 0; i < particleArray.length; i++) {  //control for the endgame
+            if (particleArray[i].desise < colorInit) {
+                someSick = true;
+                break;
+            } 
+        } 
+        allSick = true;
+        for (var i = 0; i < particleArray.length; i++) {  //control for the endgame
+            if (particleArray[i].desise == colorInit) {
+                allSick = false;
+                break;
+            }
+        } 
+        if (someSick && !allSick) {
+            for (var i = 0; i < particleArray.length; i++) {
+                particleArray[i].update();
+            }
         }
+        else {
+            if (!someSick) {
+                ctx.font = "30px Arial";
+                ctx.fillText("You Won", (widthWindow / 2) - 60, (heightWindow / 2) -30 );
+            }
+            if (allSick) {
+                ctx.font = "30px Arial";
+                ctx.fillText("You Lost", (widthWindow / 2) - 60, (heightWindow / 2) - 30);
+            }
+        }
+       
     }
 
     function rotate(velocity, angle) {
@@ -324,11 +349,11 @@ $(function () {
             //50%
            
             if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2+1*(colorInit-r0)) ){
-                otherParticle.desise--;
+                otherParticle.desise--; 
             }
             
             if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 + 1 * (colorInit - r0) ) ) {
-                otherParticle.desise--;
+                otherParticle.desise--; 
             }
 
          
@@ -341,6 +366,7 @@ $(function () {
     }
 
     init();
+   
     animate();
 
 });
