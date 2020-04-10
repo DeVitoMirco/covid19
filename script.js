@@ -227,7 +227,7 @@ $(function () {
             ctx.font = "40px  'Creepster', cursive";
             ctx.fillText("Covid19 the game", (widthWindow / 2) - 130, (heightWindow / 2) - 30);
             ctx.font = "18px  'Creepster', cursive";
-            ctx.fillText("the red dots are contagius, tap them to cure", (widthWindow / 2) - 160, (heightWindow / 2));
+            ctx.fillText("the red dots are contagious, tap them to cure", (widthWindow / 2) - 160, (heightWindow / 2));
             ctx.font = "14px  'Creepster', cursive";
             ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2)+100);
         }
