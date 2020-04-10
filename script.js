@@ -1,19 +1,10 @@
-$(function () {
-    
-
-    var lv = getParameterByName('lv');
-    if (lv == null)
-        lv = 1;
-    else
-        parseInt(lv);
-    console.log(lv);
+$(function () { 
     var myResizeTimer = null;
     var widthWindow = 0;
     var heightWindow = 0;
     var canvas = document.getElementById('canvas');
     var ctx = null;
-    var particleArray = [];
-    var canvasClicked = false
+    var particleArray = []; 
     var mousex, mousey;
     var endLevel = false;
     var colorInit = 150;
@@ -21,15 +12,20 @@ $(function () {
     var desiseIntensity = 0;
     var redDesise = 0;
     var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
-
-
-    var velDesise = 0.5; //velocity of contagius  0.1 very slow 1 normal 10 super fast
-    var touchSensibility = 20; // piu basso piu difficile 
-    var density = 600;  //max 1300
-    var radius = 20;  //piu piccolo piu difficile
-    var r0 = 150; //piu alto piu difficle 
-    var initialInfect = 6; //piu alto piu difficile 
    
+    var idAnimation;
+    var lv = 1;
+    var started = false;
+    var startFlag = true;
+    var nextLvFlag = false;
+    var nextLv = false;
+
+    var velDesise; //velocity of contagius  0.1 very slow 1 normal 10 super fast
+    var touchSensibility; // piu basso piu difficile 
+    var density;  //max 1300
+    var radius;  //piu piccolo piu difficile
+    var r0; //piu alto piu difficle 
+    var initialInfect; //piu alto piu difficile 
     //lv difficulty   ?touch=15&den=40&radius=20&r=50&infet=2
     //var touchSensibility = parseInt(getParameterByName('touch')); // piu basso piu difficile 
     //var densityLV = parseInt(getParameterByName('den'));  //10-100 piu grande piu difficile
@@ -68,14 +64,23 @@ $(function () {
     //}
 
     var someSick = false;
-    var tick = true;
- 
-    function init() {
+    var tick = true; 
+
+    function init() { 
+
+
+       
+        velDesise = 0.1 + ( lv/10 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
+        touchSensibility = 20 - lv  ; // piu basso piu difficile 
+        density = 600 + (lv*10) ;  //max 1300
+        radius = 20 - (lv/5) ;  //piu piccolo piu difficile
+        r0 = 130 + lv ; //piu alto piu difficle 
+        initialInfect = 0 + lv; //piu alto piu difficile 
+        var speed = 4 + (lv/10);
 
         var minRadiusParticle = 5;
-        var maxRadiusParticle = 50;
-        var speed = 4;
-      
+        var maxRadiusParticle = 50; 
+       
         particleArray = [];
         widthWindow = window.innerWidth;
         heightWindow = window.innerHeight;
@@ -83,13 +88,17 @@ $(function () {
         var constColors = [colorInit];
 
         if (canvas.getContext) {
+          
+
             ctx = canvas.getContext('2d');
             canvas.setAttribute('width', widthWindow);
             canvas.setAttribute('height', heightWindow);
             var longerSide = Math.max(widthWindow, heightWindow);
-            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / 100) * density) / maxRadiusParticle);
-           
+            var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / 100) * density) / maxRadiusParticle); 
 
+
+          
+            
             for (var i = 0; i < numParticules; i++) {
 
                 var randomRadius = radius;
@@ -113,6 +122,7 @@ $(function () {
                 var particle = new Particle(x, y, speed, randomRadius, desise);
                 particleArray.push(particle);
             }
+             
 
         }
     }
@@ -140,8 +150,7 @@ $(function () {
         this.collision = false;
 
         this.draw = function (desise) {
-            ctx.beginPath();
-           
+            ctx.beginPath(); 
           
             var gradient = ctx.createRadialGradient(this.x, this.y, 1, this.x - 4, this.y - 4, 20);
             if (this.desise >= colorInit) {
@@ -150,11 +159,17 @@ $(function () {
             }
              
             if (this.desise < colorInit) {
-                gradient.addColorStop(0, rgb(255, colorInit + this.desise, colorInit + this.desise));
-                gradient.addColorStop(1, rgb( this.dred, this.desise, this.desise));
-            }
-             
-           
+                //red
+                gradient.addColorStop(0, rgb(255,colorInit + this.desise,  colorInit + this.desise));
+                gradient.addColorStop(1, rgb(this.dred,this.desise,  this.desise));
+                //  //green
+                //gradient.addColorStop(0, rgb(colorInit + this.desise, 255,  colorInit + this.desise));
+                //gradient.addColorStop(1, rgb(this.desise, this.dred,this.desise));
+
+                //  //blue
+                //gradient.addColorStop(0, rgb(colorInit + this.desise, colorInit + this.desise ,255));
+                //gradient.addColorStop(1, rgb(this.desise, this.desise, this.dred)); 
+            } 
              
             ctx.arc(
                 this.x,
@@ -164,13 +179,10 @@ $(function () {
                 2 * Math.PI
             );
             //ctx.arc(this.x, this.y, radius, 0, 2 * Math.PI);
-
-            
-                ctx.fillStyle = gradient;
-                ctx.fill();
           
-        }
-
+                ctx.fillStyle = gradient;
+                ctx.fill(); 
+        } 
      
         this.update = function () {
             if (this.x + this.radius > widthWindow || this.x - this.radius < 0) {
@@ -185,10 +197,7 @@ $(function () {
                 if (this.dred <= 255-velDesise)
                     this.dred+=velDesise;
                 
-            }
-            
-               
-            
+            } 
             
             for (var i = 0; i < particleArray.length; i++) {
                 if (this === particleArray[i]) continue;
@@ -211,8 +220,22 @@ $(function () {
     }
 
     function animate() {
-        requestAnimationFrame(animate);
+        idAnimation = requestAnimationFrame(animate);
         ctx.clearRect(0, 0, widthWindow, heightWindow);
+        if (!started) {
+            ctx.fillStyle = "white";
+            ctx.font = "40px  'Creepster', cursive";
+            ctx.fillText("Covid19 the game", (widthWindow / 2) - 130, (heightWindow / 2) - 30);
+            ctx.font = "18px  'Creepster', cursive";
+            ctx.fillText("the red dots are contagius, tap them to cure", (widthWindow / 2) - 160, (heightWindow / 2));
+            ctx.font = "14px  'Creepster', cursive";
+            ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2)+100);
+        }
+        if (started) { 
+            startFlag = false; 
+        } 
+
+       
         someSick = false;
         for (var i = 0; i < particleArray.length; i++) {  //control for the endgame
             if (particleArray[i].desise < colorInit) {
@@ -227,19 +250,35 @@ $(function () {
                 break;
             }
         } 
-        if (someSick && !allSick) {
+        if (someSick && !allSick && started) {
             for (var i = 0; i < particleArray.length; i++) {
                 particleArray[i].update();
             }
         }
-        else {
-            if (!someSick) {
-                ctx.font = "30px Arial";
-                ctx.fillText("You Won", (widthWindow / 2) - 60, (heightWindow / 2) -30 );
+        else {  
+            if (!someSick) {  
+                nextLvFlag = true;
+                ctx.font = "30px  'Creepster', cursive";
+                ctx.fillText("You Survive the lv " + lv, (widthWindow / 2) - 110, (heightWindow / 2) - 30);
+                ctx.font = "14px  'Creepster', cursive";
+                ctx.fillText("Tap for the next level", (widthWindow / 2) - 60, (heightWindow / 2)); 
+                if (nextLv) {
+                    nextLv = false;
+                    nextLvFlag = false;
+                    nextLevel();
+                } 
             }
-            if (allSick) {
-                ctx.font = "30px Arial";
-                ctx.fillText("You Lost", (widthWindow / 2) - 60, (heightWindow / 2) - 30);
+            if (allSick) { 
+                nextLvFlag = true;
+                ctx.font = "30px  'Creepster', cursive";
+                ctx.fillText("You Died at lv " + lv, (widthWindow / 2) - 90, (heightWindow / 2) - 30); 
+                ctx.font = "14px  'Creepster', cursive";
+                ctx.fillText("Tap to restart", (widthWindow / 2) - 40, (heightWindow / 2)   ); 
+                if (nextLv) {
+                    nextLv = false;
+                    nextLvFlag = false;
+                    restart(); 
+                } 
             }
         }
        
@@ -255,47 +294,45 @@ $(function () {
     }
     function rgb(r, g, b) {
         return ["rgb(", r, ",", g, ",", b, ")"].join("");
-    }
+    } 
 
-    //canvas.addEventListener('click', (e) => {
-    //    var canvasClicked = true;
-    //    mousex: e.clientX;
-    //        mousey: e.clientY;
-    //    console.log("clicked")
-    //    console.log("mouse: " + mousey + " . " + mousex);
-    //});
     canvas.addEventListener('mousedown', function (e) {
-        getCursorPosition(canvas, e)
-        console.log("x: " + mousex + " y: " + mousey)
+        getCursorPosition(canvas, e);
     })
 
-    //canvas.addEventListener('mouseup touchend', function (e) {
-    //    mousex = 100000000000000;
-    //    mousey = 100000000000000;
-    //});
-
- 
-   
-
+    
     function getCursorPosition(canvas, event) {
         const rect = canvas.getBoundingClientRect()
         mousex = event.clientX - rect.left;
         mousey = event.clientY - rect.top;
     }
     function isClicked(circle) {
-        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + touchSensibility;
-        cmouse = 0;
+        return Math.sqrt((mousex - circle.x) ** 2 + (mousey - circle.y) ** 2) < circle.radius + touchSensibility; 
     }
+
+    $("#canvas").click(function (e) { 
+        if (nextLvFlag) {
+            setTimeout(function () { nextLv = true; }, 1000);
+        }
+        if (startFlag)
+            started = true;
+    });
+ 
+
+    function nextLevel() { 
+        someSick = true;
+        lv++;
+        console.log(lv);
+        init(); 
+    }
+    function restart() {
+        someSick = true;
+        lv=1;
+        console.log(lv);
+        init();
+    }
+
      
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
 
     function resolveCollision(particle, otherParticle) {
 
@@ -348,15 +385,13 @@ $(function () {
 
             //50%
            
-            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2+1*(colorInit-r0)) ){
+            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2+(1*(colorInit-r0))) ){
                 otherParticle.desise--; 
             }
             
-            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 + 1 * (colorInit - r0) ) ) {
+            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 + (1 * (colorInit - r0)) ) ) {
                 otherParticle.desise--; 
-            }
-
-         
+            } 
         }
     }
 
@@ -364,9 +399,10 @@ $(function () {
         if (myResizeTimer != null) clearTimeout(myResizeTimer);
         myResizeTimer = setTimeout(init, 100);
     }
+     
+    init();  
 
-    init();
-   
     animate();
 
 });
+ 

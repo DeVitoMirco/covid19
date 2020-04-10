@@ -1,5 +1,7 @@
 body{
-	background-color: #111;
+  background-image:
+    radial-gradient(#2f2f2f,black);
+ 
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
