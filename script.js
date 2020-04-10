@@ -312,7 +312,7 @@ $(function () {
 
     $("#canvas").click(function (e) { 
         if (nextLvFlag) {
-            setTimeout(function () { nextLv = true; }, 1000);
+            setTimeout(function () { nextLv = true; }, 3000);
         }
         if (startFlag)
             started = true;
