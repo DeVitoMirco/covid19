@@ -439,11 +439,11 @@ $(function () {
 
             //50%
            
-            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2+(1*(colorInit-r0))) ){
+            if (desise1 == colorInit && desise2 > 0 && desise2 < colorInit  && r>(desise2/*+(1*(colorInit-r0))*/) ){
                 otherParticle.desise--; 
             }
             
-            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 + (1 * (colorInit - r0)) ) ) {
+            if (desise2 == colorInit && desise1 > 0 && desise1 < colorInit && r > (desise1 /*+ (1 * (colorInit - r0))*/ ) ) {
                 otherParticle.desise--; 
             } 
         }
