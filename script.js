@@ -282,13 +282,13 @@ $(function () {
 
                     ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                     setTimeout(function () {
-                        if(sec=3) sec=2;
+                        if(sec==3) sec=2;
                         ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                         setTimeout(function () {
-                            if (sec = 2) sec = 1;
+                            if (sec == 2) sec = 1;
                             ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                             setTimeout(function () {
-                                if (sec = 1) sec = 3;
+                                if (sec == 1) sec = 3;
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                             }, 1000);
                         }, 900);
