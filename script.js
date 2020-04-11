@@ -74,7 +74,7 @@ $(function () {
        
         velDesise = 0.1 + ( lv/10 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
         touchSensibility = 20  ; // piu basso piu difficile 
-        density = 350 + (lv*6) ;  //max 1300
+        density = 500 + (lv*3) ;  //max 1300
         radius = 20 - (lv/10) ;  //piu piccolo piu difficile
         r0 = 150; //piu alto piu difficle 
         initialInfect = 0 + lv; //piu alto piu difficile 
@@ -274,7 +274,10 @@ $(function () {
             if (!someSick) {
                 nextLvFlag = true;
                 ctx.font = "30px  'Creepster', cursive";
-                ctx.fillText("Level " + (lv + 1) + ": " + city[lv], (widthWindow / 2) - 90, (heightWindow / 2) - 30);
+                if ( city[lv] == undefined)
+                    ctx.fillText("Level " + (lv + 1), (widthWindow / 2) - 35, (heightWindow / 2) - 30);
+                else ctx.fillText("Level " + (lv + 1) + ": " + city[lv], (widthWindow / 2) - 90, (heightWindow / 2) - 30);
+                  
                 ctx.font = "14px  'Creepster', cursive";
                 ctx.fillText("Tap to start", (widthWindow / 2) - 30, (heightWindow / 2));
                 ctx.font = "40px  'Creepster', cursive";  
@@ -369,7 +372,8 @@ $(function () {
         someSick = true;
         lv=1;
         console.log(lv);
-        init();
+        init(); 
+       
     }
      
     function resolveCollision(particle, otherParticle) {
