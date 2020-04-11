@@ -290,7 +290,7 @@ $(function () {
                             setTimeout(function () {
                                 if (sec == 1) sec = 3;
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
-                            }, 200);
+                            }, 400);
                         }, 900);
                     }, 1000);
                  
@@ -351,7 +351,7 @@ $(function () {
     $("#canvas").click(function (e) { 
         if (nextLvFlag) {
             secFlag = true;
-            setTimeout(function () { nextLv = true; }, 3000);
+            setTimeout(function () { nextLv = true; }, 2700);
         }
         if (startFlag) {
              started = true;  
