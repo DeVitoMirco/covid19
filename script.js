@@ -253,8 +253,8 @@ $(function () {
 
             ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2) - 30); 
             if (isInstagram) {
-                ctx.fillText("&", (widthWindow / 2), (heightWindow / 2) );
-                ctx.fillText("SWIPE UP", (widthWindow / 2) - 30, (heightWindow / 2) + 20);
+                ctx.fillText("&", (widthWindow / 2) -4 , (heightWindow / 2) );
+                ctx.fillText("SWIPE UP", (widthWindow / 2) - 27, (heightWindow / 2) + 20);
             }
            
         }
