@@ -74,7 +74,7 @@ $(function () {
        
         velDesise = 0.1 + ( lv/10 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
         touchSensibility = 20  ; // piu basso piu difficile 
-        density = 600 + (lv*7) ;  //max 1300
+        density = 350 + (lv*7) ;  //max 1300
         radius = 20 - (lv/10) ;  //piu piccolo piu difficile
         r0 = 150; //piu alto piu difficle 
         initialInfect = 0 + lv; //piu alto piu difficile 
@@ -290,7 +290,7 @@ $(function () {
                             setTimeout(function () {
                                 if (sec == 1) sec = 3;
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
-                            }, 600);
+                            }, 800);
                         }, 1000);
                     }, 1000);
                  
