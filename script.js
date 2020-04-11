@@ -282,12 +282,16 @@ $(function () {
 
                     ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                     setTimeout(function () {
-                        sec=2;
+                        if(sec=3) sec=2;
                         ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                         setTimeout(function () {
-                            sec=1;
-                            ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80); 
-                        }, 1000);
+                            if (sec = 2) sec = 1;
+                            ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
+                            setTimeout(function () {
+                                if (sec = 1) sec = 3;
+                                ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
+                            }, 1000);
+                        }, 900);
                     }, 1000);
                  
                    
@@ -295,7 +299,8 @@ $(function () {
                 }
 
                 if (nextLv) {
-                    nextLv = false; 
+                    nextLv = false;
+
                     sec = 3;
                     secFlag = false; 
                     nextLvFlag = false;
