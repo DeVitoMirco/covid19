@@ -290,7 +290,7 @@ $(function () {
                             setTimeout(function () {
                                 if (sec == 1) sec = 3;
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
-                            }, 1000);
+                            }, 200);
                         }, 900);
                     }, 1000);
                  
@@ -299,8 +299,7 @@ $(function () {
                 }
 
                 if (nextLv) {
-                    nextLv = false;
-
+                    nextLv = false; 
                     sec = 3;
                     secFlag = false; 
                     nextLvFlag = false;
@@ -372,9 +371,7 @@ $(function () {
         console.log(lv);
         init();
     }
-
      
-
     function resolveCollision(particle, otherParticle) {
 
         const xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
