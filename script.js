@@ -15,6 +15,7 @@ $(function () {
     var sec = 3;
     var nSick = 0;
     var secFlag = false;
+    var isInstagram;
     var idAnimation;
     var lv = 1; 
     var started = false;
@@ -87,7 +88,7 @@ $(function () {
        
         widthWindow = window.innerWidth;
         heightWindow = window.innerHeight;
-        var isInstagram = navigator.userAgent.match(/instagram/i);
+        isInstagram = navigator.userAgent.match(/instagram/i);
         if (isInstagram) {
              
             heightWindow = window.innerHeight - 55;
