@@ -290,8 +290,8 @@ $(function () {
                             setTimeout(function () {
                                 if (sec == 1) sec = 3;
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
-                            }, 400);
-                        }, 900);
+                            }, 600);
+                        }, 1000);
                     }, 1000);
                  
                    
