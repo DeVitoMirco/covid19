@@ -16,9 +16,9 @@ $(function () {
     var nSick = 0;
     var secFlag = false;
     var idAnimation;
-    var lv = 1;
+    var lv = 1; 
     var started = false;
-    var startFlag = true;
+    var startFlag = true; 
     var nextLvFlag = false;
     var nextLv = false;
     var city = ["A bat", "Whuan","Codogno", "Bergamo", "Lombardia", "Italy", "Spain", "Europe", "NewYork", "USA", "Globe", "Galaxy", "Universe"];
@@ -72,7 +72,7 @@ $(function () {
 
 
        
-        velDesise = 0.1 + ( lv/10 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
+        velDesise = 0.1 + ( lv/5 )  ; //velocity of contagius  0.1 very slow 1 normal 10 super fast
         touchSensibility = 20  ; // piu basso piu difficile 
         density = 500 + (lv*3) ;  //max 1300
         radius = 20 - (lv/10) ;  //piu piccolo piu difficile
@@ -272,7 +272,9 @@ $(function () {
         }
         else {  
             if (!someSick) {
-                nextLvFlag = true;
+                 
+                    nextLvFlag = true;   
+            
                 ctx.font = "30px  'Creepster', cursive";
                 if ( city[lv] == undefined)
                     ctx.fillText("Level " + (lv + 1), (widthWindow / 2) - 35, (heightWindow / 2) - 30);
@@ -295,19 +297,22 @@ $(function () {
                                 ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
                             }, 400);
                         }, 500);
-                    }, 500);
-                 
-                   
+                    }, 500); 
                     
                 }
 
                 if (nextLv) {
+                    nextLvFlag = false;
                     nextLv = false; 
                     sec = 3;
                     secFlag = false; 
                     nextLvFlag = false;
-                    nextLevel();   
+                    someSick = true; 
+                    lv++;
+                    console.log(lv);
+                    init();  
                 } 
+              
             }
             if (allSick) { 
                 nextLvFlag = true;
@@ -318,11 +323,13 @@ $(function () {
                 if (nextLv) {
                     nextLv = false;
                     nextLvFlag = false;
-                    restart(); 
+                    someSick = true;
+                    lv = 1;
+                    console.log(lv);
+                    init();  
                 } 
-            }
-        }
-       
+            } 
+        } 
     }
 
     function rotate(velocity, angle) {
@@ -352,29 +359,19 @@ $(function () {
     }
 
     $("#canvas").click(function (e) { 
+        nextLv = false;
         if (nextLvFlag) {
+            nextLvFlag = false;
             secFlag = true;
             setTimeout(function () { nextLv = true; }, 1400);
+           
         }
         if (startFlag) {
              started = true;  
         }
     });
+     
  
-
-    function nextLevel() { 
-        someSick = true;
-        lv++;
-        console.log(lv);
-        init(); 
-    }
-    function restart() {
-        someSick = true;
-        lv=1;
-        console.log(lv);
-        init(); 
-       
-    }
      
     function resolveCollision(particle, otherParticle) {
 
