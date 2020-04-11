@@ -84,17 +84,25 @@ $(function () {
         var maxRadiusParticle = 50; 
        
         particleArray = [];
+       
         widthWindow = window.innerWidth;
         heightWindow = window.innerHeight;
-
+        var isInstagram = navigator.userAgent.match(/instagram/i);
+        if (isInstagram) {
+             
+            heightWindow = window.innerHeight - 55;
+            $("body").css("margin-top" , "50px")
+        }
         var constColors = [colorInit];
 
         if (canvas.getContext) {
-          
+            
 
             ctx = canvas.getContext('2d');
             canvas.setAttribute('width', widthWindow);
             canvas.setAttribute('height', heightWindow);
+            
+
             var longerSide = Math.max(widthWindow, heightWindow);
             var numParticules = Math.round(((((widthWindow * heightWindow) / longerSide) / 100) * density) / maxRadiusParticle); 
 
@@ -241,7 +249,12 @@ $(function () {
             ctx.font = "40px  'Creepster', cursive";
             ctx.fillText("Covid19 the game", (widthWindow / 2) - 130, (heightWindow / 2) - 60);
             ctx.font = "18px  'Creepster', cursive"; 
-            ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2)-30); 
+
+            ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2) - 30); 
+            if (isInstagram) {
+                ctx.fillText("SWIPE UP", (widthWindow / 2) - 40, (heightWindow / 2) + 10);
+            }
+           
         }
         if (started) { 
             startFlag = false; 
