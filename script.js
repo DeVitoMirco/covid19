@@ -12,14 +12,16 @@ $(function () {
     var desiseIntensity = 0;
     var redDesise = 0;
     var colorDesise = rgb(redDesise, desiseIntensity, desiseIntensity);
-   
+    var sec = 3;
+    var nSick = 0;
+    var secFlag = false;
     var idAnimation;
     var lv = 1;
     var started = false;
     var startFlag = true;
     var nextLvFlag = false;
     var nextLv = false;
-
+    var city = ["A bat", "Whuan","Codogno", "Bergamo", "Lombardia", "Italy", "Spain", "Europe", "NewYork", "USA", "Globe", "Galaxy", "Universe"];
     var velDesise; //velocity of contagius  0.1 very slow 1 normal 10 super fast
     var touchSensibility; // piu basso piu difficile 
     var density;  //max 1300
@@ -205,7 +207,19 @@ $(function () {
                     resolveCollision(this, particleArray[i]);
                 }
             }
-
+            //HELP
+            if (lv == 1) {
+                ctx.fillStyle = "#ff5b5b";
+                ctx.font = "20px 'Roboto', sans-serif"; 
+                ctx.fillText("The red subject are infected", (widthWindow / 2) - 120, (heightWindow / 2) -100);
+                ctx.fillText("TAP to cure them", (widthWindow / 2) - 90, (heightWindow / 2) - 60);
+            }
+            if (lv == 2) {
+                ctx.fillStyle = "#ff5b5b";
+                ctx.font = "18px 'Roboto', sans-serif"; 
+                ctx.fillText("The virus spreads by contact", (widthWindow / 2) - 110, (heightWindow / 2) +60);
+                ctx.fillText("the redest are the most contagious", (widthWindow / 2) - 140, (heightWindow / 2) +100);
+            }
      
             if (isClicked(this)) { 
                 this.desise = colorInit;  
@@ -225,11 +239,9 @@ $(function () {
         if (!started) {
             ctx.fillStyle = "white";
             ctx.font = "40px  'Creepster', cursive";
-            ctx.fillText("Covid19 the game", (widthWindow / 2) - 130, (heightWindow / 2) - 30);
-            ctx.font = "18px  'Creepster', cursive";
-            ctx.fillText("the red dots are contagious, tap them to cure", (widthWindow / 2) - 160, (heightWindow / 2));
-            ctx.font = "14px  'Creepster', cursive";
-            ctx.fillText("Tap to start lv1", (widthWindow / 2) - 40, (heightWindow / 2)+100);
+            ctx.fillText("Covid19 the game", (widthWindow / 2) - 130, (heightWindow / 2) - 60);
+            ctx.font = "18px  'Creepster', cursive"; 
+            ctx.fillText("Tap to start", (widthWindow / 2) - 40, (heightWindow / 2)-30); 
         }
         if (started) { 
             startFlag = false; 
@@ -243,35 +255,57 @@ $(function () {
                 break;
             } 
         } 
-        allSick = true;
+        nSick = 0;
+        allSick = false;
         for (var i = 0; i < particleArray.length; i++) {  //control for the endgame
-            if (particleArray[i].desise == colorInit) {
-                allSick = false;
-                break;
+            if (particleArray[i].desise < colorInit) {
+                nSick++;
+                if (nSick > particleArray.length - 5 && started)
+                    allSick = true;
             }
         } 
+        
         if (someSick && !allSick && started) {
             for (var i = 0; i < particleArray.length; i++) {
                 particleArray[i].update();
             }
         }
         else {  
-            if (!someSick) {  
+            if (!someSick) {
                 nextLvFlag = true;
                 ctx.font = "30px  'Creepster', cursive";
-                ctx.fillText("You Survive the lv " + lv, (widthWindow / 2) - 110, (heightWindow / 2) - 30);
+                ctx.fillText("Level " + (lv + 1) + ": " + city[lv], (widthWindow / 2) - 90, (heightWindow / 2) - 30);
                 ctx.font = "14px  'Creepster', cursive";
-                ctx.fillText("Tap for the next level", (widthWindow / 2) - 60, (heightWindow / 2)); 
+                ctx.fillText("Tap to start", (widthWindow / 2) - 30, (heightWindow / 2));
+                ctx.font = "40px  'Creepster', cursive";  
+                if (secFlag) {  
+
+                    ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
+                    setTimeout(function () {
+                        sec=2;
+                        ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80);
+                        setTimeout(function () {
+                            sec=1;
+                            ctx.fillText(sec, (widthWindow / 2), (heightWindow / 2) + 80); 
+                        }, 1000);
+                    }, 1000);
+                 
+                   
+                    
+                }
+
                 if (nextLv) {
-                    nextLv = false;
+                    nextLv = false; 
+                    sec = 3;
+                    secFlag = false; 
                     nextLvFlag = false;
-                    nextLevel();
+                    nextLevel();   
                 } 
             }
             if (allSick) { 
                 nextLvFlag = true;
                 ctx.font = "30px  'Creepster', cursive";
-                ctx.fillText("You Died at lv " + lv-1, (widthWindow / 2) - 90, (heightWindow / 2) - 30); 
+                ctx.fillText("You Died at lv " + lv, (widthWindow / 2) - 90, (heightWindow / 2) - 30); 
                 ctx.font = "14px  'Creepster', cursive";
                 ctx.fillText("Tap to restart", (widthWindow / 2) - 40, (heightWindow / 2)   ); 
                 if (nextLv) {
@@ -312,10 +346,11 @@ $(function () {
 
     $("#canvas").click(function (e) { 
         if (nextLvFlag) {
+            secFlag = true;
             setTimeout(function () { nextLv = true; }, 3000);
         }
         if (startFlag) {
-            setTimeout(function () { started = true; }, 3000);
+             started = true;  
         }
     });
  
